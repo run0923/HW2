@@ -1,17 +1,51 @@
 class MoviesController < ApplicationController
 
-  def show
+def initialize
+	@all_ratings = Movie.all_ratings
+	super
+end  
+
+
+def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
   end
 
   def index
-    @movies = Movie.find(:all, :order => (params[:sort_by]))
-    @sort_column = params[:sort_by]	
-  end
+   
+	reload = false
+	
+	if params[:sort] != nil
+		@sorting = params[:sort]	
+	elsif session[:sort] !=nil
+		@sorting = session[:sort]
+		reload = true
+	end
+	
+	if params[:ratings] != nil
+		@ratings = params[:ratings]
+	elsif session[:ratings] !=nil
+		@sorting = session[:ratings]
+		reload = true
+	else
+	@all_ratings.each do |rate|
+		(@ratings ||= {} )[rate] = 1
 
-  def new
+	end
+		reload = true
+  end
+	if reload
+		redirect_to movies_path(:sort => @sorting, :ratings => @ratings)
+	end
+	Movie.find(:all, :order => @sorting ? @sorting : :id).each do |m|
+		if @ratings.keys.include? m[:rating]
+			(@movies ||= [] ) << m
+		end
+     end
+end 
+
+def new
     # default: render 'new' template
   end
 
@@ -40,3 +74,4 @@ class MoviesController < ApplicationController
   end
 
 end
+
