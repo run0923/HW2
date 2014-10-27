@@ -37,7 +37,7 @@ def show
 		reload = true
   end
 	if reload
-		movies_path(:sort => @sorting, :ratings => @ratings)
+		redirect_to movies_path(:sort => @sorting, :ratings => @ratings)
 	end
 	Movie.find(:all, :order => @sorting ? @sorting : :id).each do |m|
 		if @ratings.keys.include? m[:rating]
