@@ -5,4 +5,3 @@ def self.all_ratings
 end
 
 end
-

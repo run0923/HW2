@@ -13,7 +13,9 @@ def show
   end
 
   def index
-   
+    #@movies = Movie.find(:all, :order => (params[:sort_by]))
+	#@sort_column = params[:sort_by]
+
 	reload = false
 	
 	if params[:sort] != nil
